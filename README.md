@@ -201,3 +201,71 @@ use nodash::pack_bytes;
 let bytes: [u8; 32] = [0; 32];
 let packed = pack_bytes(bytes);
 ```
+
+### Validate `main` function inputs
+
+`fn main` inputs are not validated by Noir. For example, you have a `U120` struct like this:
+
+```rs
+struct U120 {
+    inner: Field,
+}
+
+impl U120 {
+    fn new(inner: Field) -> Self {
+        inner.assert_max_bit_size::<120>();
+        Self { inner }
+    }
+}
+```
+
+You then can create instances of `U120` with `U120::new(123)`. If you pass a value that is larger than 2^120 to `U120::new`, you will get a runtime error because we assert the max bit size of `Field` in `U120::new`.
+
+However, Noir does not check the validity of `U120` fields when passed to a `fn main` function. For example, for this circuit
+
+```rs
+fn main(a: U120) {
+    // do something with a
+}
+```
+
+...you can pass any arbitrary value to `a` from JavaScript and it will NOT fail in Noir when `main` is executed:
+
+```js
+// this succeeds but it shouldn't!
+await noir.execute({
+  a: {
+    inner: 2n * 10n ** 120n + 1n,
+  },
+});
+```
+
+To fix this, you can use the `validate_inputs` attribute on the `main` function:
+
+```rs
+use nodash::validate_inputs;
+
+// this attribute checks that `U120` is within the range via `ValidateInput` trait
+#[validate_inputs]
+fn main(a: U120) {
+    // do something with a
+}
+
+impl ValidateInput for U120 {
+    fn validate(self) {
+        // call the `new` function that asserts the max bit size
+        U120::new(self.inner);
+    }
+}
+```
+
+Now, if you pass a value that is larger than 2^120 to `a` in JavaScript, you will get a runtime error:
+
+```js
+// runtime error: "Assertion failed: call to assert_max_bit_size"
+await noir.execute({
+  a: {
+    inner: 2n * 10n ** 120n + 1n,
+  },
+});
+```
