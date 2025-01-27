@@ -1,11 +1,11 @@
 #[nodash::validate_inputs]
-fn my_main(a: Field, b: u64, _s: GoodStruct) -> Field {
+fn my_main(a: Field, b: u64) -> Field {
     a + b as Field
 }
 
 #[test]
 fn test_validate_inputs() {
-    let result = my_main(1, 2, GoodStruct {});
+    let result = my_main(1, 2);
     assert(result == 3);
 }
 
@@ -53,12 +53,6 @@ fn test_validate_u120_fail() {
     let inner = 2.pow_32(120);
     let result = main_u120(U120 { inner });
     assert(result == inner);
-}
-
-struct GoodStruct {}
-
-impl nodash::ValidateInput for GoodStruct {
-    fn validate(self) {}
 }
 
 struct U120 {
