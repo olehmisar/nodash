@@ -1,10 +1,6 @@
 name: Noir tests
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+on: [push]
 
 env:
   CARGO_TERM_COLOR: always
