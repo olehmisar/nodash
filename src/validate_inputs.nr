@@ -15,8 +15,17 @@ pub comptime fn validate_inputs(f: FunctionDefinition) {
     f.set_body(checked_body.as_expr().expect(f"failed to concatenate body with checks"));
 }
 
+#[derive_via(derive_validate_input)]
 pub trait ValidateInput {
     fn validate(self);
+}
+
+comptime fn derive_validate_input(s: StructDefinition) -> Quoted {
+    let name = quote { nodash::ValidateInput };
+    let signature = quote { fn validate(self)  };
+    let for_each_field = |name| quote { nodash::ValidateInput::validate(self.$name); };
+    let body = |fields| quote {  $fields  };
+    std::meta::make_trait_impl(s, name, signature, for_each_field, quote { , }, body)
 }
 
 impl ValidateInput for u8 {

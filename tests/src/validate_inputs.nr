@@ -51,8 +51,25 @@ fn test_validate_u120() {
 #[test(should_fail_with = "call to assert_max_bit_size")]
 fn test_validate_u120_fail() {
     let inner = 2.pow_32(120);
-    let result = main_u120(U120 { inner });
+    let _ = main_u120(U120 { inner });
+}
+
+#[nodash::validate_inputs]
+fn main_struct_derive(a: NestedStruct) -> Field {
+    a.value.inner
+}
+
+#[test]
+fn test_validate_struct_derive() {
+    let inner = 2.pow_32(120) - 1;
+    let result = main_struct_derive(NestedStruct { value: U120 { inner } });
     assert(result == inner);
+}
+
+#[test(should_fail_with = "call to assert_max_bit_size")]
+fn test_validate_struct_derive_fail() {
+    let inner = 2.pow_32(120);
+    let _ = main_struct_derive(NestedStruct { value: U120 { inner } });
 }
 
 struct U120 {
@@ -70,4 +87,9 @@ impl nodash::ValidateInput for U120 {
     fn validate(self) {
         let _ = U120::new(self.inner);
     }
+}
+
+#[derive(nodash::ValidateInput)]
+struct NestedStruct {
+    value: U120,
 }
