@@ -243,7 +243,7 @@ await noir.execute({
 To fix this, you can use the `validate_inputs` attribute on the `main` function:
 
 ```rs
-use nodash::validate_inputs;
+use nodash::{validate_inputs, ValidateInput};
 
 // this attribute checks that `U120` is within the range via `ValidateInput` trait
 #[validate_inputs]
