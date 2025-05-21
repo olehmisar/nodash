@@ -29,16 +29,23 @@ where
     if value > THREE {
         let mut z = value;
         let mut x = value / TWO + ONE;
-        for _ in 0..999999999 {
+        crate::debug::print_field("sqrt_unconstrained init x", x);
+        crate::debug::print_field("sqrt_unconstrained init z", z);
+        for i in 0..256 { // Limiting iterations for safety in test/debug; 256 should be plenty for u128. Original was 999999999
             if x < z {
                 z = x;
                 x = (value / x + x) / TWO;
+                crate::debug::print_u64("sqrt_unconstrained iter", i as u64);
+                crate::debug::print_field("sqrt_unconstrained iter x", x);
+                crate::debug::print_field("sqrt_unconstrained iter z", z);
             } else {
+                crate::debug::print_u64("sqrt_unconstrained break at iter", i as u64);
                 break;
             }
         }
         z
     } else if value > ZERO {
+        crate::debug::print_str("sqrt_unconstrained value > 0", "returning 1");
         ONE
     } else {
         ZERO
@@ -154,5 +161,40 @@ mod tests {
             // std::println(f"{pair} {result}");
             assert(result == pair[1]);
         }
+    }
+
+    #[test]
+    fn test_sqrt_max_values() {
+        // u8::max_value() = 255. sqrt(255) = 15 (15*15=225, 16*16=256)
+        assert(sqrt(u8::max_value()) == 15u8);
+
+        // u16::max_value() = 65535. sqrt(65535) = 255 (255*255=65025, 256*256=65536)
+        assert(sqrt(u16::max_value()) == 255u16);
+
+        // u32::max_value() = 4294967295. sqrt(4294967295) = 65535 (65535*65535 = 4294836225, 65536*65536 = 4294967296)
+        assert(sqrt(u32::max_value()) == 65535u32);
+        
+        // u64::max_value() = 18446744073709551615. sqrt() = 4294967295
+        // 4294967295 * 4294967295 = 18446744065119617025
+        // 4294967296 * 4294967296 = 18446744073709551616 (which is u64::max_value() + 1)
+        assert(sqrt(u64::max_value()) == 4294967295u64);
+    }
+
+    #[test]
+    fn test_sqrt_near_perfect_squares() {
+        // Near 16 (sqrt 4)
+        assert(sqrt(15u64) == 3); // 3*3=9, 4*4=16
+        assert(sqrt(16u64) == 4);
+        assert(sqrt(17u64) == 4); // 4*4=16, 5*5=25
+
+        // Near 100 (sqrt 10)
+        assert(sqrt(99u64) == 9);
+        assert(sqrt(100u64) == 10);
+        assert(sqrt(101u64) == 10);
+
+        // Near a larger square, e.g. 123*123 = 15129
+        assert(sqrt(15128u64) == 122); // 122*122 = 14884, 123*123 = 15129
+        assert(sqrt(15129u64) == 123);
+        assert(sqrt(15130u64) == 123);
     }
 }

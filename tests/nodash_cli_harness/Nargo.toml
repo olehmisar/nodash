@@ -1,0 +1,8 @@
+[package]
+name = "nodash_cli_harness"
+type = "bin"
+authors = ["nodash_dev"]
+compiler_version = ">=0.26.0"
+
+[dependencies]
+nodash = { path = "../.." }

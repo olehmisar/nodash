@@ -12,6 +12,15 @@ impl Numeric for u8 {
     }
 }
 
+impl Numeric for Field {
+    fn zero() -> Self {
+        0
+    }
+    fn one() -> Self {
+        1
+    }
+}
+
 impl Numeric for u16 {
     fn zero() -> Self {
         0
