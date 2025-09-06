@@ -7,7 +7,7 @@ Nodash is a utility library for [Noir](https://github.com/noir-lang/noir) langua
 Put this into your Nargo.toml.
 
 ```toml
-nodash = { git = "https://github.com/olehmisar/nodash/", tag = "v0.41.3" }
+nodash = { git = "https://github.com/olehmisar/nodash/", tag = "v0.42.0" }
 ```
 
 ## Docs
@@ -92,6 +92,10 @@ let hash = keccak256([10, 20]);
 // or
 let hash = keccak256(BoundedVec::from_parts([10, 20, 0], 2));
 ```
+
+#### Partial SHA256
+
+Similar to partial [`sha256`](https://github.com/noir-lang/sha256) but supports `BoundedVec<u8, N>` and `[u8; N]` as input.
 
 ### `solidity::encode_with_selector`
 

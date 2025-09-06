@@ -13,6 +13,28 @@ pub fn sha256<let N: u32>(input: impl ArrayOrBoundedVec<u8, N>) -> [u8; 32] {
     dep::sha256::sha256_var(input.storage(), input.len() as u64)
 }
 
+pub fn partial_sha256_interstitial<let N: u32>(
+    mut h: [u32; 8],
+    input: impl ArrayOrBoundedVec<u8, N>,
+) -> [u32; 8] {
+    let input = input.as_bounded_vec();
+    dep::sha256::partial_sha256_var_interstitial(h, input.storage(), input.len())
+}
+
+pub fn partial_sha256_end<let N: u32>(
+    mut h: [u32; 8],
+    partial_input: impl ArrayOrBoundedVec<u8, N>,
+    full_input_len: u32,
+) -> [u8; 32] {
+    let partial_input = partial_input.as_bounded_vec();
+    dep::sha256::partial_sha256_var_end(
+        h,
+        partial_input.storage(),
+        partial_input.len(),
+        full_input_len,
+    )
+}
+
 pub fn keccak256<let N: u32>(input: impl ArrayOrBoundedVec<u8, N>) -> [u8; 32] {
     let input = input.as_bounded_vec();
     dep::keccak256::keccak256(input.storage(), input.len())
