@@ -10,7 +10,7 @@ pub fn pedersen<let N: u32>(input: [Field; N]) -> Field {
 
 pub fn sha256<let N: u32>(input: impl ArrayOrBoundedVec<u8, N>) -> [u8; 32] {
     let input = input.as_bounded_vec();
-    dep::sha256::sha256_var(input.storage(), input.len() as u64)
+    dep::sha256::sha256_var(input.storage(), input.len())
 }
 
 pub fn partial_sha256_interstitial<let N: u32>(
@@ -99,10 +99,7 @@ mod tests {
                 ),
         );
         assert(pedersen(FIELD_INPUT_ARR) == std::hash::pedersen_hash(FIELD_INPUT_ARR));
-        assert(
-            sha256(U8_INPUT_ARR)
-                == dep::sha256::sha256_var(U8_INPUT_ARR, U8_INPUT_ARR.len() as u64),
-        );
+        assert(sha256(U8_INPUT_ARR) == dep::sha256::sha256_var(U8_INPUT_ARR, U8_INPUT_ARR.len()));
         assert(
             keccak256(U8_INPUT_ARR) == dep::keccak256::keccak256(U8_INPUT_ARR, U8_INPUT_ARR.len()),
         );
