@@ -6,9 +6,13 @@ Nodash is a utility library for [Noir](https://github.com/noir-lang/noir) langua
 
 Put this into your Nargo.toml.
 
+<!-- x-release-please-start-version -->
+
 ```toml
 nodash = { git = "https://github.com/olehmisar/nodash/", tag = "v0.43.0" }
 ```
+
+<!-- x-release-please-end -->
 
 ## Docs
 
