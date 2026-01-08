@@ -9,6 +9,10 @@ jobs:
   release-please:
     name: Create Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - name: Run release-please
         id: release
