@@ -9,7 +9,7 @@ Put this into your Nargo.toml.
 <!-- x-release-please-start-version -->
 
 ```toml
-nodash = { git = "https://github.com/olehmisar/nodash/", tag = "v0.43.0" }
+nodash = { git = "https://github.com/olehmisar/nodash/", tag = "v0.43.1" }
 ```
 
 <!-- x-release-please-end -->
