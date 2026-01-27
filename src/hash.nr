@@ -1,4 +1,7 @@
-pub fn poseidon2<let N: u32>(input: impl ArrayOrBoundedVec<Field, N>) -> Field {
+pub fn poseidon2<T, let N: u32>(input: T) -> Field
+where
+    T: ArrayOrBoundedVec<Field, N>,
+{
     let input = input.as_bounded_vec();
     poseidon::poseidon2::Poseidon2::hash(input.storage(), input.len())
 }
@@ -8,24 +11,30 @@ pub fn pedersen<let N: u32>(input: [Field; N]) -> Field {
     std::hash::pedersen_hash(input)
 }
 
-pub fn sha256<let N: u32>(input: impl ArrayOrBoundedVec<u8, N>) -> [u8; 32] {
+pub fn sha256<T, let N: u32>(input: T) -> [u8; 32]
+where
+    T: ArrayOrBoundedVec<u8, N>,
+{
     let input = input.as_bounded_vec();
     dep::sha256::sha256_var(input.storage(), input.len())
 }
 
-pub fn partial_sha256_interstitial<let N: u32>(
-    mut h: [u32; 8],
-    input: impl ArrayOrBoundedVec<u8, N>,
-) -> [u32; 8] {
+pub fn partial_sha256_interstitial<T, let N: u32>(mut h: [u32; 8], input: T) -> [u32; 8]
+where
+    T: ArrayOrBoundedVec<u8, N>,
+{
     let input = input.as_bounded_vec();
     dep::sha256::partial_sha256_var_interstitial(h, input.storage(), input.len())
 }
 
-pub fn partial_sha256_end<let N: u32>(
+pub fn partial_sha256_end<T, let N: u32>(
     mut h: [u32; 8],
-    partial_input: impl ArrayOrBoundedVec<u8, N>,
+    partial_input: T,
     full_input_len: u32,
-) -> [u8; 32] {
+) -> [u8; 32]
+where
+    T: ArrayOrBoundedVec<u8, N>,
+{
     let partial_input = partial_input.as_bounded_vec();
     dep::sha256::partial_sha256_var_end(
         h,
@@ -35,7 +44,10 @@ pub fn partial_sha256_end<let N: u32>(
     )
 }
 
-pub fn keccak256<let N: u32>(input: impl ArrayOrBoundedVec<u8, N>) -> [u8; 32] {
+pub fn keccak256<T, let N: u32>(input: T) -> [u8; 32]
+where
+    T: ArrayOrBoundedVec<u8, N>,
+{
     let input = input.as_bounded_vec();
     dep::keccak256::keccak256(input.storage(), input.len())
 }
@@ -70,38 +82,32 @@ mod tests {
 
     #[test]
     fn test_equivalence() {
-        assert(
-            (poseidon2(FIELD_INPUT_ARR) == poseidon2(FIELD_INPUT_VEC)),
-            // TODO: is this a bug? https://discord.com/channels/1113924620781883405/1333383938198212659
-            // & (poseidon2(FIELD_INPUT_ARR) == poseidon2(FIELD_INPUT_VEC_LONGER)),
-        );
-        assert(
-            (sha256(U8_INPUT_VEC) == sha256(U8_INPUT_ARR))
-                & (sha256(U8_INPUT_VEC_LONGER) == sha256(U8_INPUT_ARR)),
-        );
-        assert(
-            (keccak256(U8_INPUT_VEC) == keccak256(U8_INPUT_ARR))
-                & (keccak256(U8_INPUT_VEC_LONGER) == keccak256(U8_INPUT_ARR)),
-        );
+        assert_eq(poseidon2(FIELD_INPUT_ARR), poseidon2(FIELD_INPUT_VEC));
+        assert_eq(poseidon2(FIELD_INPUT_ARR), poseidon2(FIELD_INPUT_VEC_LONGER));
+        assert_eq(sha256(U8_INPUT_VEC), sha256(U8_INPUT_ARR));
+        assert_eq(sha256(U8_INPUT_VEC_LONGER), sha256(U8_INPUT_ARR));
+        assert_eq(keccak256(U8_INPUT_VEC), keccak256(U8_INPUT_ARR));
+        assert_eq(keccak256(U8_INPUT_VEC_LONGER), keccak256(U8_INPUT_ARR));
     }
 
     #[test]
     fn test_against_std() {
-        assert(
-            poseidon2(FIELD_INPUT_ARR)
-                == poseidon::poseidon2::Poseidon2::hash(FIELD_INPUT_ARR, FIELD_INPUT_ARR.len()),
+        assert_eq(
+            poseidon2(FIELD_INPUT_ARR),
+            poseidon::poseidon2::Poseidon2::hash(FIELD_INPUT_ARR, FIELD_INPUT_ARR.len()),
         );
-        assert(
-            poseidon2(FIELD_INPUT_VEC_LONGER)
-                == poseidon::poseidon2::Poseidon2::hash(
-                    FIELD_INPUT_VEC_LONGER.storage(),
-                    FIELD_INPUT_VEC_LONGER.len(),
-                ),
+        assert_eq(
+            poseidon2(FIELD_INPUT_VEC_LONGER),
+            poseidon::poseidon2::Poseidon2::hash(
+                FIELD_INPUT_VEC_LONGER.storage(),
+                FIELD_INPUT_VEC_LONGER.len(),
+            ),
         );
-        assert(pedersen(FIELD_INPUT_ARR) == std::hash::pedersen_hash(FIELD_INPUT_ARR));
-        assert(sha256(U8_INPUT_ARR) == dep::sha256::sha256_var(U8_INPUT_ARR, U8_INPUT_ARR.len()));
-        assert(
-            keccak256(U8_INPUT_ARR) == dep::keccak256::keccak256(U8_INPUT_ARR, U8_INPUT_ARR.len()),
+        assert_eq(pedersen(FIELD_INPUT_ARR), std::hash::pedersen_hash(FIELD_INPUT_ARR));
+        assert_eq(sha256(U8_INPUT_ARR), dep::sha256::sha256_var(U8_INPUT_ARR, U8_INPUT_ARR.len()));
+        assert_eq(
+            keccak256(U8_INPUT_ARR),
+            dep::keccak256::keccak256(U8_INPUT_ARR, U8_INPUT_ARR.len()),
         );
     }
 }
