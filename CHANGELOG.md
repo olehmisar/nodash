@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.43.3](https://github.com/olehmisar/nodash/compare/v0.43.2...v0.43.3) (2026-01-27)
+
+
+### Features
+
+* Bump poseidon2 to v0.2.3 ([90b5312](https://github.com/olehmisar/nodash/commit/90b53122aafc62021111902c4631affa414a9087))
+
 ## [0.43.2](https://github.com/olehmisar/nodash/compare/v0.43.1...v0.43.2) (2026-01-20)
 
 
