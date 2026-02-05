@@ -1,3 +1,13 @@
+// to avoid naming conflicts with the function names
+// TODO: remove this when absolute paths are supported in Noir https://github.com/noir-lang/noir/pull/11471
+mod deps {
+    pub(crate) use sha256::{partial_sha256_var_end, partial_sha256_var_interstitial, sha256_var};
+
+    pub(crate) fn keccak256_<let N: u32>(input: [u8; N], message_size: u32) -> [u8; 32] {
+        keccak256::keccak256(input, message_size)
+    }
+}
+
 pub fn poseidon2<T, let N: u32>(input: T) -> Field
 where
     T: ArrayOrBoundedVec<Field, N>,
@@ -16,7 +26,7 @@ where
     T: ArrayOrBoundedVec<u8, N>,
 {
     let input = input.as_bounded_vec();
-    dep::sha256::sha256_var(input.storage(), input.len())
+    deps::sha256_var(input.storage(), input.len())
 }
 
 pub fn partial_sha256_interstitial<T, let N: u32>(mut h: [u32; 8], input: T) -> [u32; 8]
@@ -24,7 +34,7 @@ where
     T: ArrayOrBoundedVec<u8, N>,
 {
     let input = input.as_bounded_vec();
-    dep::sha256::partial_sha256_var_interstitial(h, input.storage(), input.len())
+    deps::partial_sha256_var_interstitial(h, input.storage(), input.len())
 }
 
 pub fn partial_sha256_end<T, let N: u32>(
@@ -36,7 +46,7 @@ where
     T: ArrayOrBoundedVec<u8, N>,
 {
     let partial_input = partial_input.as_bounded_vec();
-    dep::sha256::partial_sha256_var_end(
+    deps::partial_sha256_var_end(
         h,
         partial_input.storage(),
         partial_input.len(),
@@ -49,7 +59,7 @@ where
     T: ArrayOrBoundedVec<u8, N>,
 {
     let input = input.as_bounded_vec();
-    dep::keccak256::keccak256(input.storage(), input.len())
+    deps::keccak256_(input.storage(), input.len())
 }
 
 /// Needed because of https://github.com/noir-lang/noir/issues/7054
@@ -71,6 +81,7 @@ impl<T, let N: u32> ArrayOrBoundedVec<T, N> for BoundedVec<T, N> {
 
 mod tests {
     use crate::hash::{keccak256, pedersen, poseidon2, sha256};
+    use super::deps;
 
     global FIELD_INPUT_ARR: [Field; 2] = [1, 2];
     global FIELD_INPUT_VEC: BoundedVec<Field, 2> = BoundedVec::from(FIELD_INPUT_ARR);
@@ -104,10 +115,7 @@ mod tests {
             ),
         );
         assert_eq(pedersen(FIELD_INPUT_ARR), std::hash::pedersen_hash(FIELD_INPUT_ARR));
-        assert_eq(sha256(U8_INPUT_ARR), dep::sha256::sha256_var(U8_INPUT_ARR, U8_INPUT_ARR.len()));
-        assert_eq(
-            keccak256(U8_INPUT_ARR),
-            dep::keccak256::keccak256(U8_INPUT_ARR, U8_INPUT_ARR.len()),
-        );
+        assert_eq(sha256(U8_INPUT_ARR), deps::sha256_var(U8_INPUT_ARR, U8_INPUT_ARR.len()));
+        assert_eq(keccak256(U8_INPUT_ARR), deps::keccak256_(U8_INPUT_ARR, U8_INPUT_ARR.len()));
     }
 }
