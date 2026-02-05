@@ -16,7 +16,10 @@ pub fn to_hex_string_bytes(value: Field) -> [u8; 64] {
 }
 
 global U64_STR_LEN: u32 = 20;
-pub fn str_to_u64(arr: impl Into<[u8; U64_STR_LEN]>) -> u64 {
+pub fn str_to_u64<T>(arr: T) -> u64
+where
+    T: Into<[u8; U64_STR_LEN]>,
+{
     let arr = arr.into().map(|x| x as u32);
 
     let mut parsed_number: Field = 0;
