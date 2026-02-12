@@ -2,7 +2,7 @@ pub(crate) mod sqrt;
 pub(crate) mod numeric;
 
 use numeric::Numeric;
-use std::{cmp::Eq, ops::{Add, Div, Rem}};
+use std::ops::{Add, Div, Sub};
 
 pub fn clamp<T>(x: T, min: T, max: T) -> T
 where
@@ -19,14 +19,9 @@ where
 
 pub fn div_ceil<T>(a: T, b: T) -> T
 where
-    T: Add + Div + Rem + Eq + Numeric,
+    T: Numeric + Add + Sub + Div,
 {
-    let q = a / b;
-    if (a % b == T::zero()) {
-        q
-    } else {
-        q + T::one()
-    }
+    (a + (b - T::one())) / b
 }
 
 mod tests {
