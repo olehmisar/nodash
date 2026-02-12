@@ -30,8 +30,8 @@ impl<T, let N: u32> crate::ArrayExtensions<T, N> for [T; N] {
     }
 
     fn enumerate(self) -> [(u32, T); N] {
-        let mut res = [(0, self[0]); N]; // TODO: should I use std::zeroed() instead?
-        for i in 1..N {
+        let mut res = [(0, std::mem::zeroed()); N];
+        for i in 0..N {
             res[i] = (i as u32, self[i]);
         }
         res
