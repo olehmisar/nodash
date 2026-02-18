@@ -70,7 +70,7 @@ mod tests {
 
     #[test]
     fn test_sqrt_many_numbers() {
-        let pairs: [[u128; 2]] = &[
+        let pairs: [[u128; 2]] = [
             [0, 0],
             [1, 1],
             [2, 1],
