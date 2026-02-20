@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.44.1](https://github.com/olehmisar/nodash/compare/v0.44.0...v0.44.1) (2026-02-20)
+
+
+### Features
+
+* Faster `div_ceil` ([a3c362b](https://github.com/olehmisar/nodash/commit/a3c362b320ae0c6004daa68e675933df4f4ab7f7))
+
 ## [0.44.0](https://github.com/olehmisar/nodash/compare/v0.43.3...v0.44.0) (2026-01-27)
 
 
