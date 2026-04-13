@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.45.0](https://github.com/olehmisar/nodash/compare/v0.44.1...v0.45.0) (2026-04-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* bump poseidon to v0.3.0 ([#12](https://github.com/olehmisar/nodash/issues/12))
+* remove validate_inputs and ValidateInput ([#13](https://github.com/olehmisar/nodash/issues/13))
+
+### Miscellaneous Chores
+
+* Bump poseidon to v0.3.0 ([#12](https://github.com/olehmisar/nodash/issues/12)) ([fd2f12b](https://github.com/olehmisar/nodash/commit/fd2f12bfa8775c84a69ff09da4cff7db36bd14ce))
+* Remove validate_inputs and ValidateInput ([#13](https://github.com/olehmisar/nodash/issues/13)) ([b2efd70](https://github.com/olehmisar/nodash/commit/b2efd70549d8549d292dad6116e57812173a9e3d))
+
 ## [0.44.1](https://github.com/olehmisar/nodash/compare/v0.44.0...v0.44.1) (2026-02-20)
 
 
