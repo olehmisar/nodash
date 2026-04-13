@@ -1,6 +1,0 @@
-[package]
-name = "tests"
-type = "lib"
-
-[dependencies]
-nodash = { path = "../" }
