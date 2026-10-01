@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.46.0](https://github.com/olehmisar/nodash/compare/v0.45.0...v0.46.0) (2026-10-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* bump poseidon to v0.4.0 ([#17](https://github.com/olehmisar/nodash/issues/17))
+
+### Bug Fixes
+
+* Bump poseidon to v0.4.0 ([#17](https://github.com/olehmisar/nodash/issues/17)) ([cc577ba](https://github.com/olehmisar/nodash/commit/cc577ba2db31b19b8533518688bab575e4144eb5))
+
 ## [0.45.0](https://github.com/olehmisar/nodash/compare/v0.44.1...v0.45.0) (2026-04-13)
 
 
